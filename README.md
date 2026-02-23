@@ -1,8 +1,9 @@
 # Rejseplanen MCP Server (FastMCP)
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/ShredderAlex/rejseplanen-mcp-fastmcp)
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https://github.com/ShredderAlex/rejseplanen-mcp-fastmcp)
 
-A [FastMCP](https://github.com/jlowin/fastmcp) server providing integration with the Rejseplanen.dk API 2.0 for Danish public transportation journey planning. This Python-based MCP server uses HTTP transport and can be deployed to cloud platforms like Render.
+A [FastMCP](https://github.com/jlowin/fastmcp) server providing integration with the Rejseplanen.dk API 2.0 for Danish public transportation journey planning. This Python-based MCP server uses HTTP transport and can be deployed to cloud platforms like Render and Railway.
 
 ## 🚆 Features
 
@@ -104,10 +105,12 @@ Get information about the MCP server.
 
 ## ☁️ Cloud Deployment
 
-### Deploy to Render (Recommended)
+### Deploy to Render
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/ShredderAlex/rejseplanen-mcp-fastmcp)
 
 #### Option 1: One-Click Deploy
-Click the "Deploy to Render" button at the top of this README.
+Click the "Deploy to Render" button above.
 
 #### Option 2: Manual Deployment
 
@@ -125,12 +128,51 @@ Click the "Deploy to Render" button at the top of this README.
    https://your-service-name.onrender.com/mcp
    ```
 
+#### Using render.yaml (Infrastructure as Code)
+
+The repository includes a `render.yaml` file for automated deployment:
+
+1. Go to [Render Dashboard](https://dashboard.render.com/)
+2. Click **New** → **Blueprint**
+3. Connect your GitHub repository
+4. Render will automatically detect `render.yaml`
+5. Click **Apply**
+
+### Deploy to Railway
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https://github.com/ShredderAlex/rejseplanen-mcp-fastmcp)
+
+#### Option 1: One-Click Deploy
+Click the "Deploy on Railway" button above.
+
+#### Option 2: Manual Deployment
+
+1. Fork this repository to your GitHub account
+2. Sign up/login to [Railway](https://railway.app)
+3. Create a new project
+4. Connect your GitHub repository
+5. Railway will automatically detect the `railway.json` configuration
+6. (Optional) Set environment variables if needed:
+   - **Key**: `REJSEPLANEN_API_KEY` (if API key required in future)
+   - **Value**: Your API key
+7. Deploy!
+
+Your server will be available at the Railway-provided URL with the `/mcp` endpoint.
+
+#### Using railway.json (Infrastructure as Code)
+
+The repository includes a `railway.json` file that configures:
+- Build system (NIXPACKS)
+- Start command: `python src/server.py`
+- Restart policy with automatic retries
+
+**Note**: The server uses only pure Python dependencies (no Rust compilation required), ensuring fast and reliable builds on Railway's platform.
+
 ### Other Deployment Options
 
 This server can be deployed to any platform that supports Python web applications:
 
 - **Heroku**: Add a `Procfile` with `web: python src/server.py`
-- **Railway**: Works out of the box, detects Python automatically
 - **Google Cloud Run**: Build with Docker, expose port 8000
 - **AWS Elastic Beanstalk**: Deploy as Python application
 - **Fly.io**: Create `fly.toml` configuration
@@ -144,7 +186,7 @@ Connect your deployed MCP server to [Poke](https://poke.com):
 1. Go to [poke.com/settings/connections](https://poke.com/settings/connections)
 2. Add a new connection:
    - **Name**: `Rejseplanen`
-   - **URL**: `https://your-service-name.onrender.com/mcp`
+   - **URL**: `https://your-service-name.onrender.com/mcp` (or Railway URL)
    - **Type**: Streamable HTTP
 3. Save the connection
 
@@ -212,6 +254,7 @@ rejseplanen-mcp-fastmcp/
 │   └── server.py          # Main FastMCP server implementation
 ├── .gitignore             # Python gitignore patterns
 ├── README.md              # This file
+├── railway.json           # Railway deployment configuration
 ├── render.yaml            # Render deployment configuration
 └── requirements.txt       # Python dependencies
 ```
@@ -242,6 +285,7 @@ def my_new_tool(param1: str, param2: int = 10) -> Dict[str, Any]:
 - `PORT`: Server port (default: 8000)
 - `ENVIRONMENT`: Environment name (development/production)
 - `PYTHON_VERSION`: Python version for deployment
+- `REJSEPLANEN_API_KEY`: (Optional) API key if required by Rejseplanen API
 
 ## 🧪 Testing
 
@@ -261,10 +305,10 @@ See "Testing with MCP Inspector" section above.
 
 ## 📊 Monitoring
 
-When deployed to Render:
-- View logs in the Render dashboard
-- Monitor memory and CPU usage
-- Set up health check endpoint (server responds at `/mcp`)
+When deployed to cloud platforms:
+- **Render**: View logs in the Render dashboard, monitor memory and CPU usage
+- **Railway**: Access logs and metrics in the Railway dashboard
+- **Health Check**: Server responds at `/mcp` endpoint
 
 ## 🤝 Contributing
 
@@ -296,12 +340,12 @@ Alexander Schröder
 This repository also has a TypeScript/Node.js version: [rejseplanen-mcp-server](https://github.com/ShredderAlex/rejseplanen-mcp-server)
 
 | Feature | FastMCP (This) | TypeScript Version |
-|---------|----------------|--------------------|
+|---------|----------------|-------------------|
 | **Language** | Python | TypeScript/Node.js |
 | **Framework** | FastMCP | @modelcontextprotocol/sdk |
 | **Transport** | HTTP (cloud-ready) | stdio (local) |
 | **Best For** | Cloud deployment, Poke | Claude Desktop |
-| **Deployment** | Render, Heroku, etc. | Local npm install |
+| **Deployment** | Render, Railway, etc. | Local npm install |
 | **Testing** | MCP Inspector | Claude Desktop |
 
 Choose this version if you want:
@@ -324,4 +368,5 @@ Choose the TypeScript version if you want:
 - **FastMCP**: https://github.com/jlowin/fastmcp
 - **MCP Specification**: https://modelcontextprotocol.io/
 - **Render**: https://render.com
+- **Railway**: https://railway.app
 - **Poke**: https://poke.com
